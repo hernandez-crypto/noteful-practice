@@ -12,7 +12,7 @@ const serializeNote = note => ({
   title: xss(note.title),
   modified: note.modified,
   content: xss(note.content),
-  folderid: note.folderid
+  folderid: note.folderid,
 });
 
 notesRouter
@@ -32,15 +32,12 @@ notesRouter
     for (const [key, value] of Object.entries(newNote))
       if (value === null)
         return res.status(400).json({
-          error: { message: `Missing '${key} in request body` }
+          error: { message: `Missing '${key} in request body` },
         });
 
     newNote.modified = modified;
 
-    NotesService.insertNote(
-      req.app.get('db'),
-      newNote
-    )
+    NotesService.insertNote(req.app.get('db'), newNote)
       .then(note => {
         res
           .status(201)
@@ -53,14 +50,11 @@ notesRouter
 notesRouter
   .route('/:note_id')
   .all((req, res, next) => {
-    NotesService.getById(
-      req.app.get('db'),
-      req.params.note_id
-    )
+    NotesService.getById(req.app.get('db'), req.params.note_id)
       .then(note => {
         if (!note) {
           return res.status(404).json({
-            error: { message: `Note doesn't exist` }
+            error: { message: `Note doesn't exist` },
           });
         }
         res.note = note;
@@ -72,10 +66,7 @@ notesRouter
     res.json(serializeNote(res.note));
   })
   .delete((req, res, next) => {
-    NotesService.deleteNote(
-      req.app.get('db'),
-      req.params.note_id
-    )
+    NotesService.deleteNote(req.app.get('db'), req.params.note_id)
       .then(NumRowsAffected => {
         res.status(204).end();
       })
@@ -89,15 +80,12 @@ notesRouter
     if (numberOfValues === 0)
       return res.status(400).json({
         error: {
-          message: 'Request body must contain either new_name, content, or modified'
-        }
+          message:
+            'Request body must contain either new_name, content, or modified',
+        },
       });
 
-    NotesService.updateNote(
-      req.app.get('db'),
-      req.params.note_id,
-      noteToUpdate
-    )
+    NotesService.updateNote(req.app.get('db'), req.params.note_id, noteToUpdate)
       .then(numRowsAffected => {
         res.status(204).end();
       })

@@ -31,7 +31,7 @@ const NotesService = {
     return knex('notes')
       .where({ id })
       .update(newNoteFields);
-  }
+  },
 };
 
 module.exports = NotesService;
