@@ -2,7 +2,7 @@
   "name": "express-boilerplate",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "mocha --require test/setup.js",
     "migrate": "postgrator --config postgrator-config.js",
